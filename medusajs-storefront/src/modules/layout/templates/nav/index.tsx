@@ -22,9 +22,14 @@ export default async function Nav() {
           <div className="flex items-center h-full">
             <LocalizedClientLink
               href="/"
-              className="txt-compact-xlarge-plus hover:text-ui-fg-base uppercase"
+              className="txt-compact-xlarge-plus hover:text-ui-fg-base uppercase flex items-center gap-x-2"
             >
-              Medusa Store
+              <img
+                src="https://res.cloudinary.com/dfpuqqyjm/image/upload/v1726886544/yoink_ho4sef.png"
+                alt="Logo"
+                className="h-8 w-8"
+              />
+              0xBootleg
             </LocalizedClientLink>
           </div>
 

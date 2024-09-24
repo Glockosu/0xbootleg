@@ -1,6 +1,8 @@
 import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
 import { Heading, Text } from "@medusajs/ui"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import NFTDisplayWidget from "@modules/products/components/token-fetch" // Adjust the path as necessary
+
 
 type ProductInfoProps = {
   product: PricedProduct
@@ -25,9 +27,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         <Text className="text-medium text-ui-fg-subtle">
           {product.description}
         </Text>
+        
+        {/* NFT Display Widget */}
+        <NFTDisplayWidget />
       </div>
     </div>
-  )
+  );
 }
 
 export default ProductInfo
