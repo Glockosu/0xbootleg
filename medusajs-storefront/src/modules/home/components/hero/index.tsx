@@ -1,4 +1,5 @@
 "use client";
+import Image from 'next/image'; // Import Next.js Image component
 import { Heading } from "@medusajs/ui";
 
 const Hero = () => {
@@ -15,7 +16,7 @@ const Hero = () => {
           level="h2"
           className="text-xl leading-8 text-ui-fg-subtle font-normal"
         >
-          I'm glad you made it.
+          Im glad you made it.
         </Heading>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
@@ -25,10 +26,12 @@ const Hero = () => {
               <h3 className="text-2xl font-semibold">Collections</h3>
               <p></p>
               <div className="mt-4">
-                <img
+                <Image
                   src="https://res.cloudinary.com/dfpuqqyjm/image/upload/v1726887564/collectionsgif_bct6b9.gif"
                   alt="Collections gif"
-                  className="w-40 h-auto mx-auto"
+                  width={160}  // Set appropriate width and height
+                  height={100}
+                  className="mx-auto"
                 />
               </div>
             </div>
@@ -40,10 +43,12 @@ const Hero = () => {
               <h3 className="text-2xl font-semibold">1/1 Sproto Prints</h3>
               <p></p>
               <div className="mt-4">
-                <img
+                <Image
                   src="https://res.cloudinary.com/dfpuqqyjm/image/upload/v1726887555/sprotogif_oaiulv.gif"
                   alt="Sproto gif"
-                  className="w-40 h-auto mx-auto"
+                  width={160}  // Set appropriate width and height
+                  height={100}
+                  className="mx-auto"
                 />
               </div>
             </div>
@@ -58,10 +63,12 @@ const Hero = () => {
               <h3 className="text-2xl font-semibold">Custom Remilia Smiley</h3>
               <p></p>
               <div className="mt-4">
-                <img
+                <Image
                   src="https://res.cloudinary.com/dfpuqqyjm/image/upload/v1726887882/remiliasmileygif-ezgif.com-crop_jvbpf4.gif"
                   alt="Remilia gif"
-                  className="w-40 h-auto mx-auto"
+                  width={160}  // Set appropriate width and height
+                  height={100}
+                  className="mx-auto"
                 />
               </div>
             </div>
@@ -84,4 +91,5 @@ const Hero = () => {
 };
 
 export default Hero;
+
 

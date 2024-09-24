@@ -1,12 +1,13 @@
 "use client";
 // footer.tsx
+import Image from 'next/image'; // Import Next.js Image component
 import { Text, clx } from "@medusajs/ui";
 import LocalizedClientLink from "@modules/common/components/localized-client-link";
 import MedusaCTA from "@modules/layout/components/medusa-cta";
 import { getCategoriesList, getCollectionsList } from "@lib/data";
 
 // Footer component now accepts collections and categories as props
-export default function Footer({ collections, product_categories }) {
+export default function Footer({}) {
   return (
     <footer className="border-t border-ui-border-base w-full">
       <div className="content-container flex flex-col w-full">
@@ -26,10 +27,12 @@ export default function Footer({ collections, product_categories }) {
               rel="noopener noreferrer"
               className="flex items-center"
             >
-              <img
+              <Image
                 src="https://res.cloudinary.com/dfpuqqyjm/image/upload/v1727208550/icons8-twitterx-50_1_y6o5d5.png"
                 alt="X logo"
-                className="w-6 h-6 hover-effect"
+                width={24}  // Set the width and height manually for optimization
+                height={24}
+                className="hover-effect"
               />
             </a>
 
@@ -40,10 +43,12 @@ export default function Footer({ collections, product_categories }) {
               rel="noopener noreferrer"
               className="flex items-center"
             >
-              <img
+              <Image
                 src="https://res.cloudinary.com/dfpuqqyjm/image/upload/v1727208549/icons8-google-blog-search-50_qtb4hx.png"
                 alt="Blog"
-                className="w-6 h-6 hover-effect"
+                width={24}  // Set the width and height manually for optimization
+                height={24}
+                className="hover-effect"
               />
             </a>
           </div>
@@ -76,6 +81,7 @@ export async function getStaticProps() {
     },
   };
 }
+
 
 
 
