@@ -1,3 +1,4 @@
+// components/LineItemOptions.tsx
 import { ProductVariant } from "@medusajs/medusa"
 import { Text } from "@medusajs/ui"
 
@@ -12,3 +13,4 @@ const LineItemOptions = ({ variant }: LineItemOptionsProps) => {
 }
 
 export default LineItemOptions
+

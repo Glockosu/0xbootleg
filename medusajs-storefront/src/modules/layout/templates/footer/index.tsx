@@ -22,7 +22,7 @@ export default function Footer({}) {
           <div className="flex items-center gap-8">
             {/* X.com Link with hover effect */}
             <a
-              href="https://x.com"
+              href="https://x.com/0xbootleg"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center"

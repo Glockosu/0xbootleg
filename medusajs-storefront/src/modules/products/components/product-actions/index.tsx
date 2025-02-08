@@ -1,3 +1,5 @@
+// src/modules/products/components/product-actions/index.tsx
+
 "use client"
 
 import { Region } from "@medusajs/medusa"
@@ -14,6 +16,7 @@ import OptionSelect from "@modules/products/components/option-select"
 
 import MobileActions from "../mobile-actions"
 import ProductPrice from "../product-price"
+import NFTDisplayWidget from "../nft-options"
 
 type ProductActionsProps = {
   product: PricedProduct
@@ -27,12 +30,15 @@ export type PriceType = {
   percentage_diff?: string
 }
 
-export default function ProductActions({
-  product,
-  region,
-}: ProductActionsProps) {
+export default function ProductActions({ product, region }: ProductActionsProps) {
   const [options, setOptions] = useState<Record<string, string>>({})
   const [isAdding, setIsAdding] = useState(false)
+
+  // --- NFT state lifted up here ---
+  const [tokenID, setTokenID] = useState("")
+  const [nftImage, setNftImage] = useState("")
+
+  // -----------------------------
 
   const countryCode = useParams().countryCode as string
 
@@ -57,11 +63,9 @@ export default function ProductActions({
       if (!variant.options || !variant.id) continue
 
       const temp: Record<string, string> = {}
-
       for (const option of variant.options) {
         temp[option.option_id] = option.value
       }
-
       map[variant.id] = temp
     }
 
@@ -105,20 +109,25 @@ export default function ProductActions({
   }, [variant])
 
   const actionsRef = useRef<HTMLDivElement>(null)
-
   const inView = useIntersection(actionsRef, "0px")
 
-  // add the selected variant to the cart
+  // add the selected variant to the cart – now including NFT metadata if available
   const handleAddToCart = async () => {
     if (!variant?.id) return null
 
     setIsAdding(true)
 
+    // Build extra metadata if an NFT token was provided.
+    const extraMetadata = tokenID ? { nft_token: tokenID } : {}
+
+    // TypeScript complains because "metadata" is not in the original type.
+    // We cast the object to "any" to bypass the type-check.
     await addToCart({
       variantId: variant.id,
       quantity: 1,
       countryCode,
-    })
+      metadata: extraMetadata,
+    } as any)
 
     setIsAdding(false)
   }
@@ -126,26 +135,36 @@ export default function ProductActions({
   return (
     <>
       <div className="flex flex-col gap-y-2" ref={actionsRef}>
+        {/* Existing options and variant selection */}
         <div>
           {product.variants.length > 1 && (
             <div className="flex flex-col gap-y-4">
-              {(product.options || []).map((option) => {
-                return (
-                  <div key={option.id}>
-                    <OptionSelect
-                      option={option}
-                      current={options[option.id]}
-                      updateOption={updateOptions}
-                      title={option.title}
-                    />
-                  </div>
-                )
-              })}
+              {(product.options || []).map((option) => (
+                <div key={option.id}>
+                  <OptionSelect
+                    option={option}
+                    current={options[option.id]}
+                    updateOption={updateOptions}
+                    title={option.title}
+                  />
+                </div>
+              ))}
               <Divider />
             </div>
           )}
         </div>
 
+        {/* Conditionally render the NFT widget only for product "sg1of1" */}
+        {product.handle === "sg1of1" && (
+          <NFTDisplayWidget
+            tokenID={tokenID}
+            setTokenID={setTokenID}
+            nftImage={nftImage}
+            setNftImage={setNftImage}
+          />
+        )}
+
+        {/* Existing price and add to cart button */}
         <ProductPrice product={product} variant={variant} region={region} />
 
         <Button

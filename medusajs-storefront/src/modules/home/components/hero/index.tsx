@@ -21,9 +21,9 @@ const Hero = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
           {/* Men's Collection */}
-          <a href="/collections/men" className="text-ui-fg-base hover:underline">
+          <a href="/store" className="text-ui-fg-base hover:underline">
             <div className="p-6 bg-ui-bg-subtle border border-ui-border-base rounded-lg hover-effect">
-              <h3 className="text-2xl font-semibold">Collections</h3>
+              <h3 className="text-2xl font-semibold">Products</h3>
               <p></p>
               <div className="mt-4">
                 <Image
@@ -38,7 +38,7 @@ const Hero = () => {
           </a>
 
           {/* Women's Collection */}
-          <a href="/collections/women" className="text-ui-fg-base hover:underline">
+          <a href="/collections/sproto" className="text-ui-fg-base hover:underline">
             <div className="p-6 bg-ui-bg-subtle border border-ui-border-base rounded-lg hover-effect">
               <h3 className="text-2xl font-semibold">1/1 Sproto Prints</h3>
               <p></p>
@@ -56,7 +56,7 @@ const Hero = () => {
 
           {/* Accessories Collection */}
           <a
-            href="/collections/accessories"
+            href="/collections/smiley"
             className="text-ui-fg-base hover:underline"
           >
             <div className="p-6 bg-ui-bg-subtle border border-ui-border-base rounded-lg hover-effect">
