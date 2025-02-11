@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "medusa-payment-paypal": "^6.0.5"
+  }
+}
