@@ -1,3 +1,4 @@
+// modal/index.tsx
 import { Dialog, Transition } from "@headlessui/react"
 import { clx } from "@medusajs/ui"
 import React, { Fragment } from "react"
@@ -11,6 +12,7 @@ type ModalProps = {
   size?: "small" | "medium" | "large"
   search?: boolean
   children: React.ReactNode
+  metadata?: Record<string, any>  // Optional metadata (e.g., NFT key-value pairs)
 }
 
 const Modal = ({
@@ -19,6 +21,7 @@ const Modal = ({
   size = "medium",
   search = false,
   children,
+  metadata,
 }: ModalProps) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -32,7 +35,7 @@ const Modal = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-opacity-75 backdrop-blur-md  h-screen" />
+          <div className="fixed inset-0 bg-opacity-75 backdrop-blur-md h-screen" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-hidden">
@@ -66,7 +69,19 @@ const Modal = ({
                   }
                 )}
               >
-                <ModalProvider close={close}>{children}</ModalProvider>
+                <ModalProvider close={close}>
+                  {/* If metadata exists, display it here */}
+                  {metadata && (
+                    <div className="mb-4 p-2 border border-dashed border-gray-300 rounded text-sm text-ui-fg-muted">
+                      {Object.entries(metadata).map(([key, value]) => (
+                        <div key={key}>
+                          {key}: {String(value)}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {children}
+                </ModalProvider>
               </Dialog.Panel>
             </Transition.Child>
           </div>

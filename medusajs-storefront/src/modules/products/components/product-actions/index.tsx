@@ -1,5 +1,4 @@
 // src/modules/products/components/product-actions/index.tsx
-
 "use client"
 
 import { Region } from "@medusajs/medusa"
@@ -13,15 +12,10 @@ import { useIntersection } from "@lib/hooks/use-in-view"
 import { addToCart } from "@modules/cart/actions"
 import Divider from "@modules/common/components/divider"
 import OptionSelect from "@modules/products/components/option-select"
-
 import MobileActions from "../mobile-actions"
 import ProductPrice from "../product-price"
 import NFTDisplayWidget from "../nft-options"
-
-type ProductActionsProps = {
-  product: PricedProduct
-  region: Region
-}
+import RemiliaSmileyWidget from "../remiliasmiley-options/RemiliaSmileyWidget"
 
 export type PriceType = {
   calculated_price: string
@@ -30,18 +24,20 @@ export type PriceType = {
   percentage_diff?: string
 }
 
+type ProductActionsProps = {
+  product: PricedProduct
+  region: Region
+}
+
 export default function ProductActions({ product, region }: ProductActionsProps) {
   const [options, setOptions] = useState<Record<string, string>>({})
   const [isAdding, setIsAdding] = useState(false)
 
-  // --- NFT state lifted up here ---
+  // --- NFT state ---
   const [tokenID, setTokenID] = useState("")
   const [nftImage, setNftImage] = useState("")
 
-  // -----------------------------
-
   const countryCode = useParams().countryCode as string
-
   const variants = product.variants
 
   // initialize the option state
@@ -108,29 +104,53 @@ export default function ProductActions({ product, region }: ProductActionsProps)
     }
   }, [variant])
 
+  // Validate NFT token if applicable
+  const isValidNft =
+    product.handle !== "sg1of1" ||
+    (tokenID &&
+      !isNaN(Number(tokenID)) &&
+      Number(tokenID) >= 1 &&
+      Number(tokenID) <= 333)
+
   const actionsRef = useRef<HTMLDivElement>(null)
   const inView = useIntersection(actionsRef, "0px")
+  const [customText, setCustomText] = useState("")
 
-  // add the selected variant to the cart – now including NFT metadata if available
+  const isValidCustomText =
+    product.handle !== "remiliasmiley" ||
+    (customText && customText.trim().length > 0 && customText.trim().length <= 100)
+
+  // add the selected variant to the cart
   const handleAddToCart = async () => {
+    if (product.handle === "remiliasmiley" && !isValidCustomText) {
+      alert("Please enter valid custom text (1-100 characters) for this product.")
+      return
+    }
+    if (product.handle === "sg1of1" && (!tokenID || !isValidNft)) {
+      alert("Please enter a valid NFT token number between 1 and 333.")
+      return
+    }
     if (!variant?.id) return null
-
+  
+    // Log token and metadata for debugging
+    const extraMetadata =
+      product.handle === "remiliasmiley"
+        ? { custom_text: customText }
+        : product.handle === "sg1of1"
+        ? { nft_token: tokenID }
+        : {}
+    console.log("Adding to cart with metadata:", extraMetadata)
+  
     setIsAdding(true)
-
-    // Build extra metadata if an NFT token was provided.
-    const extraMetadata = tokenID ? { nft_token: tokenID } : {}
-
-    // TypeScript complains because "metadata" is not in the original type.
-    // We cast the object to "any" to bypass the type-check.
     await addToCart({
       variantId: variant.id,
       quantity: 1,
       countryCode,
       metadata: extraMetadata,
     } as any)
-
     setIsAdding(false)
   }
+  
 
   return (
     <>
@@ -154,7 +174,15 @@ export default function ProductActions({ product, region }: ProductActionsProps)
           )}
         </div>
 
-        {/* Conditionally render the NFT widget only for product "sg1of1" */}
+        {/* Conditionally render the custom text widget for remiliasmiley */}
+        {product.handle === "remiliasmiley" && (
+          <RemiliaSmileyWidget
+            customText={customText}
+            setCustomText={setCustomText}
+          />
+        )}
+
+        {/* Render NFT widget only for the specific product */}
         {product.handle === "sg1of1" && (
           <NFTDisplayWidget
             tokenID={tokenID}
@@ -164,12 +192,16 @@ export default function ProductActions({ product, region }: ProductActionsProps)
           />
         )}
 
-        {/* Existing price and add to cart button */}
         <ProductPrice product={product} variant={variant} region={region} />
 
         <Button
           onClick={handleAddToCart}
-          disabled={!inStock || !variant}
+          disabled={
+            !inStock ||
+            !variant ||
+            (product.handle === "remiliasmiley" && !isValidCustomText) ||
+            (product.handle === "sg1of1" && /* nft validation check */ false)
+          }
           variant="primary"
           className="w-full h-10"
           isLoading={isAdding}

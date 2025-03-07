@@ -56,7 +56,7 @@ const Hero = () => {
 
           {/* Accessories Collection */}
           <a
-            href="/collections/smiley"
+            href="/collections/cult"
             className="text-ui-fg-base hover:underline"
           >
             <div className="p-6 bg-ui-bg-subtle border border-ui-border-base rounded-lg hover-effect">

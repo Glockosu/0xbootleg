@@ -17,11 +17,9 @@ import {
 } from "@lib/data"
 
 /**
- * Retrieves the cart based on the cartId cookie
+ * Retrieves the cart based on the cartId cookie.
  *
- * @returns {Promise<Cart>} The cart
- * @example
- * const cart = await getOrSetCart()
+ * @returns {Promise<Cart>} The cart.
  */
 export async function getOrSetCart(countryCode: string) {
   const cartId = cookies().get("_medusa_cart_id")?.value
@@ -73,23 +71,31 @@ export async function addToCart({
   variantId,
   quantity,
   countryCode,
+  metadata = {},
 }: {
   variantId: string
   quantity: number
   countryCode: string
+  metadata?: Record<string, any>
 }) {
-  const cart = await getOrSetCart(countryCode).then((cart) => cart)
-
+  const cart = await getOrSetCart(countryCode)
   if (!cart) {
     return "Missing cart ID"
   }
-
   if (!variantId) {
     return "Missing product variant ID"
   }
 
+  // Debug: log the payload that will be sent
+  console.log("Adding item to cart:", {
+    cartId: cart.id,
+    variantId,
+    quantity,
+    metadata,
+  })
+
   try {
-    await addItem({ cartId: cart.id, variantId, quantity })
+    await addItem({ cartId: cart.id, variantId, quantity, metadata })
     revalidateTag("cart")
   } catch (e) {
     return "Error adding item to cart"
@@ -170,7 +176,6 @@ export async function enrichLineItems(
   }
 
   // Enrich line items with product and variant information
-
   const enrichedItems = lineItems.map((item) => {
     const product = products.find((p) => p.id === item.variant.product_id)
     const variant = product?.variants.find((v) => v.id === item.variant_id)

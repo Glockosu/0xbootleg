@@ -1,8 +1,8 @@
+// cart/components/item/index.tsx
 "use client"
 
 import { LineItem, Region } from "@medusajs/medusa"
 import { Table, Text, clx } from "@medusajs/ui"
-
 import CartItemSelect from "@modules/cart/components/cart-item-select"
 import DeleteButton from "@modules/common/components/delete-button"
 import LineItemOptions from "@modules/common/components/line-item-options"
@@ -60,8 +60,20 @@ const Item = ({ item, region, type = "full" }: ItemProps) => {
       </Table.Cell>
 
       <Table.Cell className="text-left">
-        <Text className="txt-medium-plus text-ui-fg-base">{item.title}</Text>
-        <LineItemOptions variant={item.variant} />
+        <Text className="txt-medium-plus text-ui-fg-base">
+          {item.title}
+        </Text>
+        <LineItemOptions 
+        variant={item.variant} 
+        metadata={item.metadata}
+        />
+
+        {/* Conditionally display the NFT token if present */}
+        {item.metadata?.nft_token && (
+          <Text className="text-sm text-ui-fg-muted mt-1">
+            NFT Token: {String(item.metadata.nft_token)}
+          </Text>
+        )}
       </Table.Cell>
 
       {type === "full" && (
@@ -70,7 +82,9 @@ const Item = ({ item, region, type = "full" }: ItemProps) => {
             <DeleteButton id={item.id} />
             <CartItemSelect
               value={item.quantity}
-              onChange={(value) => changeQuantity(parseInt(value.target.value))}
+              onChange={(value) =>
+                changeQuantity(parseInt(value.target.value))
+              }
               className="w-14 h-10 p-4"
             >
               {Array.from(
@@ -104,7 +118,8 @@ const Item = ({ item, region, type = "full" }: ItemProps) => {
       <Table.Cell className="!pr-0">
         <span
           className={clx("!pr-0", {
-            "flex flex-col items-end h-full justify-center": type === "preview",
+            "flex flex-col items-end h-full justify-center":
+              type === "preview",
           })}
         >
           {type === "preview" && (
