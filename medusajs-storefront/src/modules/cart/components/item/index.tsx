@@ -69,9 +69,9 @@ const Item = ({ item, region, type = "full" }: ItemProps) => {
         />
 
         {/* Conditionally display the NFT token if present */}
-        {item.metadata?.nft_token && (
+        {(item.metadata as any)?.nft_token && (
           <Text className="text-sm text-ui-fg-muted mt-1">
-            NFT Token: {String(item.metadata.nft_token)}
+            NFT Token: {String((item.metadata as any).nft_token)}
           </Text>
         )}
       </Table.Cell>
